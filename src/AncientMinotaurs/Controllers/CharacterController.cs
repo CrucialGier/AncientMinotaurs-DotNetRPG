@@ -7,6 +7,7 @@ using AncientMinotaurs.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -43,6 +44,21 @@ namespace AncientMinotaurs.Controllers
             _db.Characters.Add(character);
             _db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var currentCharacter = _db.Characters.Include(l => l.Loots).FirstOrDefault(c => c.CharacterId == id);
+            List<Loot> CharacterLoot = currentCharacter.Loots.ToList();
+            List<Item> CharacterItems = new List<Item> ();
+            foreach(Loot lootItem in CharacterLoot)
+            {
+                var temp = _db.Items.Where(i => i.ItemId == lootItem.ItemId).ToList();
+                CharacterItems.Add(temp[0]);
+            }
+            ViewBag.Items = CharacterItems;
+
+            return View(currentCharacter);
         }
     }
 }

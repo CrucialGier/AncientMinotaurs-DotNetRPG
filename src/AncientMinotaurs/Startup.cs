@@ -42,7 +42,11 @@ namespace AncientMinotaurs
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole();
+#if DEBUG
+            app.UseDeveloperExceptionPage();
+#endif
             app.UseIdentity();
+            app.UseStaticFiles();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

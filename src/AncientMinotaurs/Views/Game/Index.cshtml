@@ -1,5 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<h4>@ViewBag.Room.Description</h4>
+<ul>
+    @foreach (var path in ViewBag.Paths)
+    {
+        <li><a asp-controller="Game" asp-action="Move" asp-route-id="@path.EndId">Go to Room @path.EndId</a></li>
+    }
+</ul>
+<hr/>
+<h4>@ViewBag.Character.Name</h4>

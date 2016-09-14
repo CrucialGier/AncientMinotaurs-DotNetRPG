@@ -18,6 +18,6 @@ namespace AncientMinotaurs.Models
         public virtual ApplicationUser User { get; set; }
         public int RoomId { get; set; }
         public virtual Room Room { get; set; }
-        public virtual ICollection<Loot> HeldItems { get; set; }
+        public virtual ICollection<Loot> Loots { get; set; }
     }
 }

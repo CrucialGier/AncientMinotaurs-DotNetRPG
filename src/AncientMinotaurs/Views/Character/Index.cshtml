@@ -7,7 +7,7 @@
 
 @using System.Security.Claims
 
-<h2>Here is your list of tasks, @User.Identity.Name</h2>
+<h2>@User.Identity.Name Characters</h2>
 <hr />
 
 @if (Model.Any())
@@ -15,7 +15,7 @@
     <ul>
         @foreach (var listItem in Model)
         {
-            <li>@Html.DisplayFor(modelItem => listItem.Name)</li>
+            <li><a asp-controller="Character" asp-action="Details" asp-route-id="@listItem.CharacterId">@Html.DisplayFor(modelItem => listItem.Name)</a></li>
         }
     </ul>
 }

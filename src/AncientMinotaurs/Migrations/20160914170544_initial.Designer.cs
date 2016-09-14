@@ -152,13 +152,14 @@ namespace AncientMinotaurs.Migrations
 
                     b.Property<int>("EndId");
 
-                    b.Property<int>("PathwayId");
+                    b.Property<int>("PathwayId")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("RoomId");
+                    b.HasKey("PathwayId");
 
-                    b.HasKey("StartId", "EndId");
+                    b.HasIndex("StartId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("EndId");
 
                     b.ToTable("Pathways");
                 });
