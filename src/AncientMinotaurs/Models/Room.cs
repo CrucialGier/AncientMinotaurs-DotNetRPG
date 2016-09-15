@@ -15,6 +15,6 @@ namespace AncientMinotaurs.Models
         public virtual ICollection<Character> Characters { get; set; }
         public virtual ICollection<Monster> Monsters { get; set; }
         public virtual ICollection<Treasure> Treasures { get; set; }
-        public virtual ICollection<Pathway> Pathways { get; set; }
+        
     }
 }

@@ -8,12 +8,9 @@ namespace AncientMinotaurs.Models
 {
     public class Pathway
     {
-        [Key]
-        public int PathwayId { get; set; }
         
-        public int StartId { get; set; }
-
-   
+        public int PathwayId { get; set; }
+        public int StartId { get; set; }  
         public int EndId { get; set; }
 
 

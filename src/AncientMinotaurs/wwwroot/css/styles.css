@@ -1,3 +1,50 @@
 ﻿body {
 }
 
+#monster-form {
+    display:none;
+}
+
+.fight-box {
+    display: flex;
+}
+
+.character-page, .opponent-page {
+    display: flex;
+    width: 33%;
+    height: 33%;
+}
+
+.battle-info {
+    display: flex;
+    font-size: 26;
+}
+
+.opponent-page {
+}
+
+img {
+    width: 200px;
+    height: 200px;
+}
+
+.fight-button {
+    border: 2px solid maroon;
+    border-radius: 5px;
+    background-color: maroon;
+    text-align: center;
+    text-decoration: none;
+    padding-top: 10px;
+    color: white;
+    width: 100px;
+    height: 30px;
+}
+
+.fight-button:hover {
+    background-color: white;
+    color: maroon;
+    cursor: pointer;
+    font-size: 26px;
+    padding-top: 5px;
+    height: 35px;
+}

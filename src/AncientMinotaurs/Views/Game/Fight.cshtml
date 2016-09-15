@@ -1,0 +1,33 @@
+﻿<link href="~/css/styles.css" rel="stylesheet" />
+<style>
+    .character-page {
+        background-image: url("@ViewBag.Character.Avatar");
+        background-repeat: none;
+        background-size: cover;
+    }
+
+    .opponent-page {
+        background-image: url("@ViewBag.Monster.Avatar");
+        background-repeat: none;
+        background-size: cover;
+    }
+</style>
+
+<div class="fight-box">
+    <div class="character-page">
+        
+    </div>
+    <div class="battle-info">
+        <p>@ViewBag.Character.Name: <br />
+        Health = @ViewBag.Character.Health</p>
+        <p>
+            Vs. <br/>
+        </p>
+        <p>@ViewBag.Monster.Name:  <br />
+            Health = @ViewBag.Monster.Health</p>
+    </div>
+    <div class="opponent-page">
+        
+    </div>
+            <a asp-controller="game" asp-action="Battle" asp-route-id="@ViewBag.Monster.MonsterId" class="fight-button">Hit it!</a>
+</div>

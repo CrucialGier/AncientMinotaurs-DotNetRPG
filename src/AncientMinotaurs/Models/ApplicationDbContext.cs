@@ -16,7 +16,6 @@ namespace AncientMinotaurs.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Pathway>().HasKey(x => new { x.StartId, x.EndId });
         }
         public DbSet<Item> Items { get; set; }
         public DbSet<Character> Characters { get; set; }

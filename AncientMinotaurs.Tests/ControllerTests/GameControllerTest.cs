@@ -13,20 +13,6 @@ namespace AncientMinotaurs.Tests
 {
     public class PathwaysControllerTest
     {
-        var options = new DbContextOptions();
-        private readonly ApplicationDbContext _db = new ApplicationDbContext();
-        public UserManager<ApplicationUser> userManager;
-        [Fact]
-        public void Get_ViewResult_Index_Test(userManager, _db)
-        {
-            //Arrange
-            GameController controller = new GameController();
-
-            //Act
-            var result = controller.Index();
-
-            //Assert
-            Assert.IsType<ViewResult>(result);
-        }
+        
     }
 }

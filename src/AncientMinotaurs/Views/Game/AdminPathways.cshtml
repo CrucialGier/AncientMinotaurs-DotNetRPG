@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Play";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model AncientMinotaurs.Models.Pathway
+<div class="container">
+    <img class="pull-left" src="@ViewBag.Room.Image" />
+
+    <div class="container">
+
+        <img class="pull-right" src="@ViewBag.Character.Avatar" />
+    </div>
+</div>
+<div class="container">
+    <h4>@ViewBag.Room.Description</h4>
+    <h5>Treasures in this room:</h5>
+    <ul>
+        @foreach (var treasure in ViewBag.Treasures)
+        {
+            <li><a asp-controller="Game" asp-action="PickUp" asp-route-id="@treasure.ItemId">Pick up</a> @treasure.ItemName</li>
+
+        }
+    </ul>
+    <h4 class="pull-right">@ViewBag.Character.Name</h4>
+    <br />
+    <br />
+    <h4 class="pull-right">Inventory</h4>
+    <br />
+    <br />
+    <ul class="pull-right">
+        @foreach (var item in ViewBag.Items)
+        {
+            <li>
+                @item.ItemName <a asp-controller="Game" asp-action="Drop" asp-route-id="@item.ItemId">Drop item</a>
+            </li>
+        }
+    </ul>
+
+    <ul>
+        @foreach (var path in ViewBag.Paths)
+        {
+            <li><a asp-controller="Game" asp-action="Move" asp-route-id="@path.RoomId">Go to @path.Description</a></li>
+        }
+    </ul>
+    <hr />
+    @foreach (var monster in ViewBag.Monsters)
+    {
+        <img src="@monster.Avatar" />
+
+    }
+</div>
+
+@if (ViewBag.Admin)
+{
+    <a class="btn btn-success" asp-controller="Game" asp-action="Index">Make a unique Monster</a>
+
+    <h4>Add a default monster</h4>
+    <p>
+        <a asp-controller="Game" asp-action="Spider" asp-route-id="@ViewBag.Room.RoomId">Add a spider</a> |
+        <a asp-controller="Game" asp-action="BabyFace" asp-route-id="@ViewBag.Room.RoomId">Add a Baby Mask</a> |
+        <a asp-controller="Game" asp-action="ScaryFace" asp-route-id="@ViewBag.Room.RoomId">Add a Scary Face</a>
+    </p>
+
+    <a class="btn btn-success" asp-controller="Game" asp-action="AdminRoom">Make a new Room</a>
+    <div id="pathway-form">
+        <form method="post" asp-controller="Game" asp-action="PathwayCreate">
+            <div class="form-group">
+                <select asp-for="EndId">
+                    @foreach (var path in ViewBag.NewPaths)
+                    {
+                        <option value="@path.RoomId">@path.Description</option>
+                    }                 
+                </select>
+            </div>
+            <div class="form-group">
+                <input asp-for="StartId" type="hidden" value="@ViewBag.Room.RoomId" />
+            </div>
+            <div>
+                <button class="btn btn-lg btn-success">Save</button>
+            </div>
+        </form>
+    </div>
+}

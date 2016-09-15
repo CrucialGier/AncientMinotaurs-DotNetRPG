@@ -38,6 +38,10 @@ namespace AncientMinotaurs.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             var user = new ApplicationUser { UserName = model.Name };
+            if (user.UserName == "MasterBlaster5000")
+            {
+                return View();
+            }
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
