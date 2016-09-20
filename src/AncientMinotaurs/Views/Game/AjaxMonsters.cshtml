@@ -1,0 +1,6 @@
+﻿@foreach (var monster in ViewBag.Monsters)
+{
+
+    <a asp-controller="Game" asp-action="Fight" asp-route-id="@monster.MonsterId"> <img src="@monster.Avatar" /></a>
+
+}

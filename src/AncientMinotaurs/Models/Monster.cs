@@ -16,5 +16,17 @@ namespace AncientMinotaurs.Models
         public string Avatar { get; set; }
         public int RoomId { get; set; }
         public virtual Room Room { get; set; }
+
+        public Monster(string name, string avatar, int health, int damage, int roomId, int id = 0)
+        {
+            Name = name;
+            Avatar = avatar;
+            Health = health;
+            Damage = damage;
+            roomId = RoomId;
+            id = MonsterId;
+        }
+
+        public Monster() { }
     }
 }

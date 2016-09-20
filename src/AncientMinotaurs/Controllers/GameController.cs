@@ -71,6 +71,28 @@ namespace AncientMinotaurs.Controllers
             }
             ViewBag.Treasures = treasures;
 
+            List<Room> allRooms = _db.Rooms.ToList();
+            List<Room> newPaths = new List<Room>();
+
+            foreach (Room room in allRooms)
+            {
+                bool addThis = true;
+                foreach (Room linkedRoom in pathChoices)
+                {
+
+                    if (room.RoomId == linkedRoom.RoomId || room.RoomId == currentRoom.RoomId)
+                    {
+                        addThis = false;
+                    }
+                }
+                if (addThis)
+                {
+                    newPaths.Add(room);
+                }
+
+            }
+            ViewBag.NewPaths = newPaths;
+
             return View();
 
         }
@@ -120,6 +142,27 @@ namespace AncientMinotaurs.Controllers
                 treasures.Add(_db.Items.FirstOrDefault(i => i.ItemId == treasure.ItemId));
             }
             ViewBag.Treasures = treasures;
+            List<Room> allRooms = _db.Rooms.ToList();
+            List<Room> newPaths = new List<Room>();
+
+            foreach (Room room in allRooms)
+            {
+                bool addThis = true;
+                foreach (Room linkedRoom in pathChoices)
+                {
+
+                    if (room.RoomId == linkedRoom.RoomId || room.RoomId == currentRoom.RoomId)
+                    {
+                        addThis = false;
+                    }
+                }
+                if (addThis)
+                {
+                    newPaths.Add(room);
+                }
+
+            }
+            ViewBag.NewPaths = newPaths;
 
             return View();
 
@@ -204,7 +247,7 @@ namespace AncientMinotaurs.Controllers
             Character currentCharacter = _db.Characters.FirstOrDefault(x => x.User.Id == currentUser.Id);
             currentCharacter.RoomId = RoomId;
             _db.SaveChanges();
-            return RedirectToAction("AjaxRooms");
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> AjaxRooms()
@@ -245,6 +288,54 @@ namespace AncientMinotaurs.Controllers
                 treasures.Add(_db.Items.FirstOrDefault(i => i.ItemId == treasure.ItemId));
             }
             ViewBag.Treasures = treasures;
+            return View();
+        }
+
+        public async Task<IActionResult> AjaxMonsters()
+        {
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = await _userManager.FindByIdAsync(userId);
+            Character currentCharacter = _db.Characters.FirstOrDefault(x => x.User.Id == currentUser.Id);
+            List<Monster> monsters = _db.Monsters.Where(r => r.RoomId == currentCharacter.RoomId).ToList();
+            ViewBag.Monsters = monsters;
+            return View();
+        }
+
+        public async Task<IActionResult> AjaxAdmin()
+        {
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = await _userManager.FindByIdAsync(userId);
+            Character currentCharacter = _db.Characters.FirstOrDefault(x => x.User.Id == currentUser.Id);
+            Room currentRoom = _db.Rooms.FirstOrDefault(x => x.RoomId == currentCharacter.RoomId);
+            ViewBag.Room = currentRoom;
+
+            List<Pathway> pathIds = _db.Pathways.Where(p => p.StartId == currentCharacter.RoomId).ToList();
+            List<Room> pathChoices = new List<Room>();
+            foreach (var path in pathIds)
+            {
+                pathChoices.Add(_db.Rooms.FirstOrDefault(r => r.RoomId == path.EndId));
+            }
+
+            List<Room> allRooms = _db.Rooms.ToList();
+            List<Room> newPaths = new List<Room>();
+            foreach (Room room in allRooms)
+            {
+                bool addThis = true;
+                foreach (Room linkedRoom in pathChoices)
+                {
+
+                    if (room.RoomId == linkedRoom.RoomId || room.RoomId == currentRoom.RoomId)
+                    {
+                        addThis = false;
+                    }
+                }
+                if (addThis)
+                {
+                    newPaths.Add(room);
+                }
+            }
+            ViewBag.NewPaths = newPaths;
+
             return View();
         }
 
@@ -335,7 +426,7 @@ namespace AncientMinotaurs.Controllers
         {
             _db.Rooms.Add(room);
             _db.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("AjaxAdmin");
         }
 
         [HttpPost]
@@ -345,53 +436,39 @@ namespace AncientMinotaurs.Controllers
             pathway.PathwayId = allPaths.Count() + 1;
             _db.Pathways.Add(pathway);
             _db.SaveChanges();
-            return RedirectToAction("AdminPathways");
+            return RedirectToAction("AjaxRooms");
         }
 
         [HttpPost]
-        public IActionResult Monster(Monster monster)
+        public IActionResult MonsterCreate(Monster monster)
         {
             _db.Monsters.Add(monster);
             _db.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("AjaxMonsters");
         }
 
         // id is the currentRoom id
         public IActionResult Spider(int id)
         {
-            Monster spider = new Models.Monster();
-            spider.Avatar = "http://rs237.pbsrc.com/albums/ff27/maipen/jumping-spider-eyes-9.jpg~c200";
-            spider.Damage = 2;
-            spider.Health = 200;
-            spider.Name = "Pete";
-            spider.RoomId = id;
+            Monster spider = new Monster("Pete", "http://rs237.pbsrc.com/albums/ff27/maipen/jumping-spider-eyes-9.jpg~c200", 200, 2, id);
             _db.Monsters.Add(spider);
             _db.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("AjaxMonsters");
         }
         public IActionResult BabyFace(int id)
         {
-            Monster babyFace = new Models.Monster();
-            babyFace.Avatar = "http://images.frightprops.com/media/catalog/product/cache/1/small_image/200x200/9df78eab33525d08d6e5fb8d27136e95/c/r/cry-baby-mask.jpg";
-            babyFace.Damage = 25;
-            babyFace.Health = 40;
-            babyFace.Name = "Sami";
-            babyFace.RoomId = id;
+            Monster babyFace = new Monster("Sami", "http://images.frightprops.com/media/catalog/product/cache/1/small_image/200x200/9df78eab33525d08d6e5fb8d27136e95/c/r/cry-baby-mask.jpg", 40, 20, id);
             _db.Monsters.Add(babyFace);
             _db.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("AjaxMonsters");
         }
         public IActionResult ScaryFace(int id)
         {
-            Monster scaryFace = new Models.Monster();
+            Monster scaryFace = new Monster("Kevin", "http://ourcommunityroots.com/wp-content/uploads/2010/03/0135.jpg", 50, 20, id);
             scaryFace.Avatar = "http://ourcommunityroots.com/wp-content/uploads/2010/03/0135.jpg";
-            scaryFace.Damage = 20;
-            scaryFace.Health = 50;
-            scaryFace.Name = "Kevin";
-            scaryFace.RoomId = id;
             _db.Monsters.Add(scaryFace);
             _db.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("AjaxMonsters");
         }
 
 

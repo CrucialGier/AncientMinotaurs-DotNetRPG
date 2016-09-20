@@ -1,7 +1,7 @@
 ﻿body {
 }
 
-#monster-form {
+#room-form, #pathway-form {
     display:none;
 }
 

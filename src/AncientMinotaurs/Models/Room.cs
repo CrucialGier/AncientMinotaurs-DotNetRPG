@@ -16,5 +16,14 @@ namespace AncientMinotaurs.Models
         public virtual ICollection<Monster> Monsters { get; set; }
         public virtual ICollection<Treasure> Treasures { get; set; }
         
+
+        public Room(string description, string image, int roomId = 0)
+        {
+            Description = description;
+            Image = image;
+            RoomId = roomId;
+        }
+
+        public Room() { }
     }
 }

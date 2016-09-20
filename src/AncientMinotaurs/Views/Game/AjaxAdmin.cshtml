@@ -1,0 +1,77 @@
+﻿@model AncientMinotaurs.Models.Pathway
+
+<button id="monster-button" class="btn-success" type="button">Make a unique Monster</button>
+<button id="room-button" class="btn-success" type="button">Make a new Room</button>
+<button id="pathway-button" class="btn-success" type="button">Make a new Pathway</button>
+
+<h4>Add a default monster</h4>
+<p>
+    <a asp-controller="Game" asp-action="Spider" asp-route-id="@ViewBag.Room.RoomId">Add a spider</a> |
+    <a asp-controller="Game" asp-action="BabyFace" asp-route-id="@ViewBag.Room.RoomId">Add a Baby Mask</a> |
+    <a asp-controller="Game" asp-action="ScaryFace" asp-route-id="@ViewBag.Room.RoomId">Add a Scary Face</a>
+</p>
+<div class="forms">
+    <div id="monster-form">
+        <form action="newMonster" class="new-monster">
+            <div class="form-group">
+                <label for="Name" class="control-label">Monster Name</label>
+                <input name="Name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Avatar" class="control-label">Avatar URL</label>
+                <input name="Avatar" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Health" class="control-label">Monster Health</label>
+                <input name="Health" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Damage" class="control-label">Monster Damage</label>
+                <input name="Damage" class="form-control" />
+            </div>
+            <input type="hidden" name="RoomId" value="@ViewBag.Room.RoomId" />
+            <div>
+                <button class="btn btn-lg btn-success">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="room-form">
+        <form action="newRoom" class="new-room">
+            <div class="form-group">
+                <label for="Description" class="control-label">Room Name</label>
+                <input name="Description" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Image" class="control-label">Room Image URL</label>
+                <input name="Image" class="form-control" />
+            </div>
+            <div>
+                <button class="btn btn-lg btn-success">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="pathway-form">
+        <form action="newPathway" class="new-pathway">
+            <div class="form-group">
+                <select name="EndId">
+                    @foreach(var path in ViewBag.NewPaths)
+                    {
+                        <option value="@path.RoomId">@path.Description</option>
+
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="StartId" value="@ViewBag.Room.RoomId" />
+            </div>
+            <div>
+                <button class="btn btn-lg btn-success">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
