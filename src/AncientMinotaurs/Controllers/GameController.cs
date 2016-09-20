@@ -197,46 +197,91 @@ namespace AncientMinotaurs.Controllers
         }
 
         // id stands for RoomId of destination.
-        public async Task<IActionResult> Move(int id)
+        public async Task<IActionResult> Move(int RoomId)
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var currentUser = await _userManager.FindByIdAsync(userId);
             Character currentCharacter = _db.Characters.FirstOrDefault(x => x.User.Id == currentUser.Id);
-            currentCharacter.RoomId = id;
+            currentCharacter.RoomId = RoomId;
             _db.SaveChanges();
-            return RedirectToAction("index");
-        } 
+            return RedirectToAction("AjaxRooms");
+        }
+
+        public async Task<IActionResult> AjaxRooms()
+        {
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = await _userManager.FindByIdAsync(userId);
+            Character currentCharacter = _db.Characters.FirstOrDefault(x => x.User.Id == currentUser.Id);
+            Room currentRoom = _db.Rooms.FirstOrDefault(x => x.RoomId == currentCharacter.RoomId);
+            ViewBag.Room = currentRoom;
+            List<Pathway> pathIds = _db.Pathways.Where(p => p.StartId == currentCharacter.RoomId).ToList();
+            List<Room> pathChoices = new List<Room>();
+            foreach (var path in pathIds)
+            {
+                pathChoices.Add(_db.Rooms.FirstOrDefault(r => r.RoomId == path.EndId));
+            }
+            ViewBag.Paths = pathChoices;
+            return View();
+        }
+
+        public async Task<IActionResult> AjaxItems()
+        {
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = await _userManager.FindByIdAsync(userId);
+            Character currentCharacter = _db.Characters.Include(l => l.Loots).FirstOrDefault(x => x.User.Id == currentUser.Id);
+
+            List<Loot> CharacterLoot = currentCharacter.Loots.ToList();
+            List<Item> CharacterItems = new List<Item>();
+            foreach (Loot lootItem in CharacterLoot)
+            {
+                CharacterItems.Add(_db.Items.FirstOrDefault(i => i.ItemId == lootItem.ItemId));
+            }
+            ViewBag.Items = CharacterItems;
+            Room currentRoom = _db.Rooms.Include(t => t.Treasures).FirstOrDefault(x => x.RoomId == currentCharacter.RoomId);
+            List<Treasure> roomTreasures = currentRoom.Treasures.ToList();
+            List<Item> treasures = new List<Item>();
+            foreach (Treasure treasure in roomTreasures)
+            {
+                treasures.Add(_db.Items.FirstOrDefault(i => i.ItemId == treasure.ItemId));
+            }
+            ViewBag.Treasures = treasures;
+            return View();
+        }
 
         // id stands for ItemId of item to be retrieved.
-        public async Task<IActionResult> PickUp(int id)
+        public async Task<IActionResult> PickUp(int ItemId)
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var currentUser = await _userManager.FindByIdAsync(userId);
             Character currentCharacter = _db.Characters.FirstOrDefault(x => x.User.Id == currentUser.Id);
-            Treasure claimedItem = _db.Treasures.FirstOrDefault(t => t.RoomId == currentCharacter.RoomId && t.ItemId == id);
+            Treasure claimedItem = _db.Treasures.FirstOrDefault(t => t.RoomId == currentCharacter.RoomId && t.ItemId == ItemId);
             Loot newLoot = new Loot();
             newLoot.ItemId = claimedItem.ItemId;
             newLoot.CharacterId = currentCharacter.CharacterId;
             _db.Loots.Add(newLoot);
             _db.Treasures.Remove(claimedItem);
             _db.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("AjaxItems");
         }
 
-        public async Task<IActionResult> Drop(int id)
+     
+
+        public async Task<IActionResult> Drop(int ItemId)
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var currentUser = await _userManager.FindByIdAsync(userId);
             Character currentCharacter = _db.Characters.FirstOrDefault(x => x.User.Id == currentUser.Id);
-            Loot droppedLoot = _db.Loots.FirstOrDefault(l => l.ItemId == id && l.CharacterId == currentCharacter.CharacterId);
+            Loot droppedLoot = _db.Loots.FirstOrDefault(l => l.ItemId == ItemId && l.CharacterId == currentCharacter.CharacterId);
             Treasure newTreasure = new Treasure();
             newTreasure.RoomId = currentCharacter.RoomId;
             newTreasure.ItemId = droppedLoot.ItemId;
             _db.Treasures.Add(newTreasure);
             _db.Loots.Remove(droppedLoot);
             _db.SaveChanges();
-            return RedirectToAction("index");
+            return RedirectToAction("AjaxItems");
         }
+
+    
 
         public async Task<IActionResult> Fight(int id)
         {

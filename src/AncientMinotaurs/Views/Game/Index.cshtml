@@ -4,44 +4,30 @@
 }
 @model AncientMinotaurs.Models.Monster
 <div class="container">
-    <img class="pull-left" src="@ViewBag.Room.Image" />
-    
-    <div class="container">
-        
-        <img class="pull-right" src="@ViewBag.Character.Avatar" />
+    <div class="row">
+        <div class="col-sm-3">
+            <div id="rooms">
+                @Html.Partial("AjaxRooms")
+            </div>
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-6">
+            <div class="container">
+                <h4 >
+                    <img src="@ViewBag.Character.Avatar" />
+                    <br />@ViewBag.Character.Name
+                </h4>
+            </div>
+        </div>
     </div>
+    
 </div>
 <div class="container">
-    <h4>@ViewBag.Room.Description</h4>
-    <h5>Treasures in this room:</h5>
-    <ul>
-        @foreach (var treasure in ViewBag.Treasures)
-        {
-            <li><a asp-controller="Game" asp-action="PickUp" asp-route-id="@treasure.ItemId">Pick up</a> @treasure.ItemName</li>
-
-        }
-    </ul>
-    <h4 class="pull-right">@ViewBag.Character.Name</h4>
-    <br />
-    <br />
-    <h4 class="pull-right">Inventory</h4>
-    <br />
-    <br />
-    <ul class="pull-right">
-        @foreach (var item in ViewBag.Items)
-        {
-            <li>
-                @item.ItemName <a asp-controller="Game" asp-action="Drop" asp-route-id="@item.ItemId">Drop item</a>
-            </li>
-        }
-    </ul>
-
-    <ul>
-        @foreach (var path in ViewBag.Paths)
-        {
-            <li><a asp-controller="Game" asp-action="Move" asp-route-id="@path.RoomId">Go to @path.Description</a></li>
-        }
-    </ul>
+    
+    <hr />
+    <div id="items">
+        @Html.Partial("AjaxItems")
+    </div>
     <hr />
     @foreach (var monster in ViewBag.Monsters)
     {

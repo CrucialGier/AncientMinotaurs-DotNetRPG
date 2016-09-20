@@ -46,7 +46,7 @@ namespace AncientMinotaurs.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Details(int id)
+        public  IActionResult Details(int id)
         {
             var currentCharacter = _db.Characters.Include(l => l.Loots).FirstOrDefault(c => c.CharacterId == id);
             List<Loot> CharacterLoot = currentCharacter.Loots.ToList();

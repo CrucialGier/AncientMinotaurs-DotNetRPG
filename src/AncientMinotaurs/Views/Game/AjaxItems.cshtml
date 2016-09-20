@@ -1,0 +1,38 @@
+﻿<div class="row">
+    <div class="col-sm-6">
+        <h5>Treasures in this room:</h5>
+        <ul>
+            @foreach (var treasure in ViewBag.Treasures)
+            {
+                <li>
+                    @treasure.ItemName
+                    <form action="pickUp" class="pick-up">
+                        <input type="hidden" name="ItemId" value="@treasure.ItemId" />
+                        <button type="submit">Pick Up</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-sm-5 offset-sm-1">
+        <h4 class="pull-right">Inventory</h4>
+        <br />
+        <br />
+        <ul class="pull-right">
+            @foreach (var item in ViewBag.Items)
+            {
+                <li>
+                    @item.ItemName
+                    <form action="drop" class="drop">
+                        <input type="hidden" name="ItemId" value="@item.ItemId" />
+                        <button type="submit">Drop</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<br />
+<br />

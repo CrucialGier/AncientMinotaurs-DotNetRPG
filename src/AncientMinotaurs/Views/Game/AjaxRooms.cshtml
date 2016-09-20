@@ -1,0 +1,13 @@
+﻿<img class="pull-left" src="@ViewBag.Room.Image" />
+<h4>@ViewBag.Room.Description</h4>
+<ul>
+    @foreach (var path in ViewBag.Paths)
+    {
+        <li>
+            <form action="Move" class="move">
+                <input type="hidden" name="RoomId" value="@path.RoomId" />
+                <button type="submit">Go to @path.Description</button>
+            </form>
+        </li>
+    }
+</ul>
